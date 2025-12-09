@@ -23,8 +23,14 @@ db = SQLAlchemy(app)
 # Stripe
 stripe.api_key = os.environ.get('STRIPE_SECRET_KEY')
 
-# OpenAI
-openai_client = OpenAI(api_key=os.environ.get('OPENAI_API_KEY')) if os.environ.get('OPENAI_API_KEY') else None
+# OpenAI — safe init for new versions
+openai_client = None
+if os.environ.get('OPENAI_API_KEY'):
+    try:
+        from openai import OpenAI
+        openai_client = OpenAI(api_key=os.environ.get('OPENAI_API_KEY'))
+    except:
+        openai_client = None  # fallback if OpenAI lib version breaks
 
 # SendGrid API Key
 SENDGRID_KEY = os.environ.get('SENDGRID_API_KEY')
