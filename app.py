@@ -7,7 +7,8 @@ import requests
 from bs4 import BeautifulSoup
 import json
 import stripe
-from email.mime.text import MimeText
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 import smtplib
 from openai import OpenAI  # Assume installed; fallback to requests if not
 import re
