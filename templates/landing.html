@@ -15,16 +15,46 @@
     </style>
 </head>
 <body>
-    <div class="hero">
-        <h1>Daily London Construction Leads – Spot Jobs Fast</h1>
-        <p style="font-size:1.3rem">Get tailored alerts from public GLA planning apps.<br>Free teaser daily, premium for full details.</p>
-        <br><br>
-        <button class="btn-primary" onclick="location.href='/dashboard'">Sign In / Register</button>
-        <br><br>
-        <small>Already have access? <a href="/dashboard">Go straight to dashboard →</a></small>
+    <header class="hero">
+        <h1 style="color: #007BFF;">Daily London Construction Leads – Spot Jobs Fast</h1>
+        <p>Get tailored alerts from public GLA planning apps. Free teaser daily, premium for full details.</p>
+        <img src="https://via.placeholder.com/800x400?text=London+Construction+Grid" alt="Premium London construction visual" class="hero-img">
+        <button onclick="showAuth('login')" class="btn-primary">Sign In</button>
+        <a href="#" onclick="showAuth('register')" style="color: #6C757D;">Create Account</a>
+    </header>
+    <div id="auth-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeAuth()">&times;</span>
+            <form id="auth-form">
+                <input type="email" name="email" placeholder="Email" required>
+                <input type="password" name="password" placeholder="Password" required>
+                <select name="radius" style="display:none;"><option value="10">10km</option></select>
+                <select name="trades" multiple style="display:none;"><option value="plumber">plumber</option></select>
+                <button type="submit" class="btn-primary">Login</button>
+            </form>
+        </div>
     </div>
-    <div class="disclaimer">
-        Data sourced from public GLA PlanApps – aggregated for convenience only. We don't contact applicants or sell data. User info stored securely; opt-out anytime.
-    </div>
+    <footer class="disclaimer">Data sourced from public GLA PlanApps – aggregated for convenience only. We don't contact applicants or sell data. User info stored securely; opt-out anytime.</footer>
+    <script>
+        let authType = 'login';
+        function showAuth(type) {
+            authType = type;
+            document.getElementById('auth-modal').style.display = 'block';
+            document.querySelector('#auth-form button').textContent = type === 'register' ? 'Register' : 'Login';
+        }
+        function closeAuth() { document.getElementById('auth-modal').style.display = 'none'; }
+        document.getElementById('auth-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const endpoint = authType === 'register' ? '/register' : '/login';
+            const res = await fetch(endpoint, { method: 'POST', body: formData });
+            const data = await res.json();
+            if (data.success) {
+                window.location.href = '/dashboard';
+            } else {
+                alert(data.error || 'Error — try test@contractor.com / test123');
+            }
+        });
+    </script>
 </body>
 </html>
